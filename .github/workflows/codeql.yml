@@ -23,33 +23,28 @@ jobs:
       fail-fast: false
       matrix:
         language: [ javascript-typescript ]
+        build-mode: [ autobuild ]
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # Setup Node (needed for JS/TS scanning)
+    # Setup Node (required for JS/TS scanning)
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: "18"
 
-    # Install dependencies (CodeQL needs this to detect code)
+    # Install dependencies
     - name: Install dependencies
       run: |
         if [ -f package.json ]; then
           npm install
         fi
 
-    # Initialize CodeQL with AUTO build mode
+    # Initialize CodeQL
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v4
       with:
         languages: ${{ matrix.language }}
-        build-mode: auto
-
-    # Run CodeQL scan
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v4
-      with:
-        category: "/language:${{matrix.language}}"
+        build-mode: ${{ matrix.build
